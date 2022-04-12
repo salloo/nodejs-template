@@ -2,7 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser') // json body
 const jwt = require('jsonwebtoken');
 const app = express();
-const port = 5000;
+const bcrypt = require('bcryptjs'); // encrypt passwords etc
+const db = require('./db');
+const port = 3000;
 // secrets stored in env file
 const dotenv = require('dotenv');
 dotenv.config();
@@ -18,18 +20,20 @@ app.use(bodyParser.json())
 // require('crypto').randomBytes(64).toString('hex')
 
 function generateAccessToken(username) {
-	// Check user against db
+	// Check user against d3
 	return jwt.sign(username, process.env.TOKEN_SECRET, { expiresIn: '1800s' });
 }
 
 app.post('/api/createNewUser', async (req, res) => {
-	console.log(req.body);
 	const token = generateAccessToken({username: req.body.username});
 	res.json(token);
 });
 
-app.get('/', auth, async (req,res) => {
-	res.send('hello world');
+app.get('/', async (req,res) => {
+	//db();
+	let m = await db.getMovies();
+	console.log(m);
+	res.send(m);
 });
 
 // start app
