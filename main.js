@@ -29,10 +29,18 @@ app.post('/api/createNewUser', async (req, res) => {
 	res.json(token);
 });
 
+app.post('/api/createMovie', async(req, res) => {
+	await db.createMovie(req.body.name, req.body.rating);	
+	res.send("saved");
+});
+
+app.delete('/api/movie/:id', async(req, res) => {
+	await db.deleteById(req.params.id);
+	res.sendStatus(204);
+});
+
 app.get('/', async (req,res) => {
-	//db();
 	let m = await db.getMovies();
-	console.log(m);
 	res.send(m);
 });
 

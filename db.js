@@ -12,6 +12,7 @@ const Horror = sequelize.define('horrors', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
+      autoIncrement: true,
       allowNull: false
     },
     name: {
@@ -21,9 +22,10 @@ const Horror = sequelize.define('horrors', {
     rating: {
         type: DataTypes.FLOAT
     },
-  }, {
 
+  }, {
     // Other model options go here
+    timestamps: false
 });
 
 async function testConnection() {
@@ -47,7 +49,25 @@ const getMovies = async function () {
     }
 };
 
+const deleteById = async (id) => {
+    console.log('movie id ', id);
+    const row = await Horror.destroy({
+        where: {
+            id: id
+        }
+    });
+
+    return row;
+};
+
+const createMovie = async (name, rating) => {
+   const movie =  await Horror.create({name: name, rating: rating});
+   movie.save();
+};
+
 module.exports = {
     testConnection,
-    getMovies
+    getMovies,
+    createMovie,
+    deleteById
 };
